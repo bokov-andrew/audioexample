@@ -54,3 +54,4 @@ data_characterization.R.rdata
 *.rda
 *.rdata
 *.xlsx
+rsconnect
