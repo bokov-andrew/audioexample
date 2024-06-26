@@ -3,12 +3,12 @@ library(shiny)
 shinyServer(function(input, output, session) {
   rv <- reactiveValues(wave = NULL, recording = FALSE, range=c(0,0))
   
-  observeEvent(input$start, {
+  observeEvent(input$startRecordingButton, {
     session$sendCustomMessage(type = "startRecording", message = list())
     rv$recording <- TRUE
   })
   
-  observeEvent(input$stop, {
+  observeEvent(input$stopRecordingButton, {
     session$sendCustomMessage(type = "stopRecording", message = list())
     rv$recording <- FALSE
     #rv$wave <- NULL
