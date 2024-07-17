@@ -37,7 +37,7 @@ function startRecording() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-  
+
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
       microphone = audioContext.createMediaStreamSource(stream);
@@ -45,7 +45,8 @@ function startRecording() {
 
       scriptProcessor.onaudioprocess = function(event) {
         const audioData = event.inputBuffer.getChannelData(0);
-        Shiny.setInputValue("audioData", { data: Array.from(audioData) }, { priority: "event" });
+        const pitch = computePitch(audioData);
+        Shiny.setInputValue("pitchData", pitch);
       };
 
       microphone.connect(scriptProcessor);
@@ -64,6 +65,17 @@ function stopRecording() {
     microphone = null;
     scriptProcessor = null;
   }
+}
 
-  recording = false;
+function computePitch(audioData) {
+  // Simple pitch detection algorithm (e.g., zero-crossing rate)
+  let pitch = 0;
+  let zeroCrossings = 0;
+  for (let i = 1; i < audioData.length; i++) {
+    if ((audioData[i - 1] < 0 && audioData[i] >= 0) || (audioData[i - 1] >= 0 && audioData[i] < 0)) {
+      zeroCrossings++;
+    }
+  }
+  pitch = (zeroCrossings / audioData.length) * audioContext.sampleRate / 2;
+  return pitch;
 }

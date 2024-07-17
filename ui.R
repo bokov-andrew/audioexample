@@ -32,14 +32,9 @@ shinyUI(fluidPage(
     ),
     
     mainPanel(
-      h3("Waveform Plot"),
-      plotOutput("wavePlot"),
-      hr(),
-      h4("Note:"),
-      p("Ensure your microphone is properly connected and you have granted the necessary permissions for audio recording.")
+      tags$canvas(id = "animationCanvas", width = 800, height = 600, style = "border:1px solid #000000;")
     )
   ),
-  
-  # Include External JavaScript
-  tags$script(src = "audio.js")
+  tags$script(src = "audio.js"),
+  tags$script(src = "sprite.js")
 ))
